@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import video from './background.mp4';
 
 class Aggregate extends Component {
   render () {
@@ -14,7 +14,7 @@ class HomeButton extends Component {
   render () {
     return (
       <div style={{padding: "7px"}} className="home-button">
-        <button type="button" className="btn btn-outline-dark btn-lg">get started</button>
+        <a href="http://localhost:8888/login" className="btn btn-outline-dark btn-lg" role="button">get started</a>
       </div>
     );
   }
@@ -23,13 +23,28 @@ class HomeButton extends Component {
 class App extends Component {
   render () {
 
-    let headerStyle = {color: "black", "font-size": "50px", padding: "7px"}
+    let headerStyle = {color: "black", "font-size": "60px", padding: "7px"}
 
     return (
-      <div style={{padding: "200px"}} className="App">
+      <div style={{padding: "220px"}} className="App">
         <h1 style={headerStyle}>hipster spotify</h1>
         <Aggregate/>
         <HomeButton/>
+        <Background/>
+      </div>
+    );
+  }
+}
+
+class Background extends Component {
+  render () {
+    return (
+      <div className="background-video">
+        <video style={{display: "block"}} autoPlay muted loop>
+          <source src={video} type="video/mp4" />
+          <source src={video} type="video/ogg" />
+          Your browser does not support the video tag.
+        </video>
       </div>
     );
   }
