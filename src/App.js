@@ -23,11 +23,11 @@ class HomeButton extends Component {
 class App extends Component {
   render () {
 
-    let headerStyle = {color: "black", "font-size": "60px", padding: "7px"}
+    let headerStyle = {color: "black", "font-size": "50px", padding: "7px"}
 
     return (
       <div style={{padding: "220px"}} className="App">
-        <h1 style={headerStyle}>hipster spotify</h1>
+        <h1 style={headerStyle}>spot a bubble.</h1>
         <Aggregate/>
         <HomeButton/>
         <Background/>
@@ -47,6 +47,16 @@ class Background extends Component {
         </video>
       </div>
     );
+  }
+}
+
+class Menu extends Component {
+  render () {
+    return (
+      <div className="menu-list">
+
+      </div>
+    )
   }
 }
 
