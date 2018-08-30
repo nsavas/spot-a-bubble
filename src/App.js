@@ -66,4 +66,24 @@ class Menu extends Component {
   }
 }
 
+class GenreBubble extends Component {
+  render () {
+    return (
+      <div className="genre-bubble">
+      
+      </div>
+    )
+  }
+}
+
+class ArtistBubble extends Component {
+  render () {
+    return (
+      <div className="artist-bubble">
+      
+      </div>
+    )
+  }
+}
+
 export default App;
