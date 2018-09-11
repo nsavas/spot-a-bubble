@@ -1,20 +1,37 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch}
+from 'react-router-dom';
 import './App.css';
 
-import Header from './Components/Header';
-import HomeButton from './Components/HomeButton';
-import HomeBackground from './Components/HomeBackground';
+import Login from './Components/Login';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+        fakeServerData: {
+          genres: {},
+          artists: {}
+        }
+      }
+    }
+
+  ComponentDidMount() {
+    this.setState = {
+      genres: {},
+      artists: {}
+    }
+  }
+
   render () {
     return (
-      <div className="App">
-        <Header/>
-        <HomeButton/>
-        <HomeBackground/>
+      <Router>
+        <div className="App">
+          <Login/>
       </div>
+      </Router>
     );
   }
-}
+};
 
 export default App;
