@@ -31,8 +31,8 @@ class GenreCounter extends Component {
   render() {
     return (
       <div>
-      <h2>
-        You listen to {this.props.genreCount} different genres.
+      <h2 style={{display: "block", "text-align": "center"}}>
+        {this.props.genreCount} Genres
       </h2>
       </div>
     )
@@ -44,8 +44,8 @@ class ArtistCounter extends Component {
     return (
       <div>
         <div>
-          <h2>
-            and {this.props.artists} different artists!
+          <h2 style={{display: "block", "text-align": "center"}}>
+            {this.props.artists} Artists
           </h2>
         </div>
       </div>
@@ -56,15 +56,18 @@ class ArtistCounter extends Component {
 class Genres extends Component {
   render() {
 
-    const allGenres = this.props.genres.reduce((genres, eachGenre) => {
-      return genres.concat(eachGenre.name)
-    }, []) 
+    //  const allGenres = this.props.genres.reduce((genres, eachGenre) => {
+    //   return genres.concat(eachGenre.name)
+    // }, [])
 
     return (
-      <div>
-        <h2>
-          Here are the genres: {allGenres}
-        </h2>
+      <div className="genres" style={{display: "inline-block", padding: "20px", "text-align": "center", width: "50%"}}>
+        <h2>{this.props.genre.name}</h2>
+        <ul>
+          {this.props.genre.artists.map(artist =>
+            <li>{artist}</li>
+          )}
+        </ul>
       </div>
     )
   }
@@ -114,11 +117,10 @@ class App extends Component {
                                   this.state.serverData.user.genreCount}/>
             <ArtistCounter artists={this.state.serverData.user &&
                                     this.state.serverData.user.artistCount}/>
-            <Genres genres={this.state.serverData.user &&
-                            this.state.serverData.user.genres}/>
-            <Artists artists={this.state.serverData.user &&
-                              this.state.serverData.user.genres}/>
-
+            {
+              this.state.serverData.user.genres.map(genre =>
+              <Genres genre={genre}/>
+            )}
           </h2>
         </div> : <h1 style={{...headerStyle}}>Loading...</h1>
       }
