@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import '../App.css';
 
 class HomeButton extends Component {
     render () {
       return (
         <div style={{padding: "7px"}} className="home-button">
-          <a href="http://localhost:8888/login" className="btn btn-outline-dark btn-lg" role="button">
+          <button onClick={() => window.location='http://localhost:8888/login'} type="button" className="btn btn-outline-dark btn-lg">
           get started
-          </a>
+          </button>
         </div>
       );
     }

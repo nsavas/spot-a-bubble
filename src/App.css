@@ -1,4 +1,11 @@
+.genres-artists {
+  text-align: center
+}
 
+.login {
+  text-align: center;
+  padding: 220px;
+}
 
 h1 {
   color: black;
@@ -22,8 +29,4 @@ h1 {
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-#artist-list {
-  display: inline
 }

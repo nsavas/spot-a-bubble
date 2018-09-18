@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
+import queryString from 'query-string';
+
+import GenreCounter from './Components/GenreCounter';
+import ArtistCounter from './Components/ArtistCounter';
+// import UserArtists from './Components/UserArtists';
+// import UserGenres from './Components/UserGenres';
+import Login from './Components/Login';
 
 const headerStyle = {
   "font-size":"50px"
@@ -27,64 +34,35 @@ const fakeServerData = {
   }
 }
 
-class GenreCounter extends Component {
-  render() {
-    return (
-      <div>
-      <h2 style={{display: "block", "text-align": "center"}}>
-        {this.props.genreCount} Genres
-      </h2>
-      </div>
-    )
-  }
-}
-
-class ArtistCounter extends Component {
-  render() {
-    return (
-      <div>
-        <div>
-          <h2 style={{display: "block", "text-align": "center"}}>
-            {this.props.artists} Artists
-          </h2>
-        </div>
-      </div>
-    )
-  }
-}
-
 class Genres extends Component {
-  render() {
-
-    //  const allGenres = this.props.genres.reduce((genres, eachGenre) => {
-    //   return genres.concat(eachGenre.name)
-    // }, [])
-
-    return (
-      <div className="genres" style={{display: "inline-block", padding: "20px", "text-align": "center", width: "50%"}}>
-        <h2>{this.props.genre.name}</h2>
-        <ul>
-          {this.props.genre.artists.map(artist =>
-            <li>{artist}</li>
-          )}
-        </ul>
-      </div>
-    )
+  constructor() {
+    super();
+    this.state = {
+      showGenre: true
+    }
   }
-}
 
-class Artists extends Component {
+  onGenreClick = () => {
+    this.setState({
+      showGenre: !this.state.showGenre
+    })
+  }
+
   render() {
-
-    const allArtists = this.props.artists.reduce((genres, eachGenre) => {
-      return genres.concat(eachGenre.artists)
-    }, []) 
-
+    const artist = this.props.genre;
     return (
-      <div>
-        <h2>
-          Here are the artists: {allArtists}
-        </h2>
+      <div className="genres-artists">
+      {this.state.showGenre 
+      ? <div className="genres">
+          <h2 onClick={this.onGenreClick}>
+            {artist.genres.map( genre => <h3> {genre} </h3> )}
+          </h2>
+        </div> 
+
+      : <ul className="artists">{artist.map( artist =>
+          <li onClick={this.onGenreClick}> {artist.name} </li> )}
+        </ul>
+      }
       </div>
     )
   }
@@ -95,34 +73,78 @@ class App extends Component {
     super();
     this.state = {
       serverData: {}
-    };
+    }
   };
 
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({serverData:fakeServerData});
-    }, 1000);
+    let parsed = queryString.parse(window.location.search);
+    let accessToken = parsed.access_token;
+
+    let params = {
+      limit: 50,
+      time_range: 'long_term'
+    };
+
+    let esc = encodeURIComponent;
+    let query = Object.keys(params)
+        .map(k => esc(k) + '=' + esc(params[k]))
+        .join('&');
+
+    fetch('https://api.spotify.com/v1/me/top/artists?' + query, {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    }).then(response => response.json())
+    .then(data => this.setState({
+      serverData: {
+        user: {
+          artists: data.items
+        }
+      }
+    }))
+
+    fetch('https://api.spotify.com/v1/me', {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data)
+      this.setState({
+      serverData: {
+        user: {
+          email: data.email
+        }
+      }
+    })
+    })
+
   }
 
   render () {
     return (
       <div className="App">
-      {this.state.serverData.user ?
-        <div>
-          <h1 style={{...headerStyle}}>
-            Hi {this.state.serverData.user.name}! Here is your listening data:
-          </h1>
-          <h2>
-            <GenreCounter genreCount={this.state.serverData.user &&
-                                  this.state.serverData.user.genreCount}/>
-            <ArtistCounter artists={this.state.serverData.user &&
-                                    this.state.serverData.user.artistCount}/>
-            {
-              this.state.serverData.user.genres.map(genre =>
-              <Genres genre={genre}/>
-            )}
-          </h2>
-        </div> : <h1 style={{...headerStyle}}>Loading...</h1>
+      {this.state.serverData.user
+      ? <div className="logged-in">
+
+        {this.state.serverData.user.artists &&
+          <div>
+            <h1 style={{...headerStyle}}>
+
+              Hi {this.state.serverData.user.email}! Here is your listening data:
+
+              <h2>
+                <GenreCounter genreCount={fakeServerData.user &&
+                                        fakeServerData.user.genreCount}/>
+                <ArtistCounter artists={fakeServerData.user &&
+                                        fakeServerData.user.artistCount}/>
+                {console.log(this.state.serverData.user.artists)}
+                {this.state.serverData.user.artists.map( artist => <Genres genre={artist}/> )}
+              </h2>
+
+            </h1>
+          </div>
+        }
+
+        </div>
+
+      : <Login/>
       }
       </div>
     );

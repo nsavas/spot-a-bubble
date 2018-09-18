@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import video from './background.mp4';
+import '../App.css';
 
 class HomeBackground extends Component {
     render () {
