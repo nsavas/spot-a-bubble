@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 
-class GenreCounter extends Component {
-    render() {
-      return (
-        <div>
-          <h2 style={{display: "block", "text-align": "center"}}>
-            {this.props.genreCount} Genres
-          </h2>
-        </div>
-      )
-    }
-  }
+function GenreCounter(props) {
+
+  let genreCount = 0;
+
+  props.artists.forEach( (artist) => {
+    genreCount += artist.genres.length
+  })
+
+  return (
+    <h2 style={{display: "block", "text-align": "center"}}>
+      {genreCount} Genres
+    </h2>
+  )
+}
 
 export default GenreCounter;

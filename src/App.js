@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import queryString from 'query-string';
 
-import GenreCounter from './Components/GenreCounter';
-import ArtistCounter from './Components/ArtistCounter';
 // import UserArtists from './Components/UserArtists';
 // import UserGenres from './Components/UserGenres';
 import Login from './Components/Login';
@@ -12,26 +10,30 @@ const headerStyle = {
   "font-size":"50px"
 }
 
-const fakeServerData = {
-  user: {
-    name: 'Bob',
-    genreCount: '13',
-    artistCount: '67',
-    genres: [
-      {
-        name: 'Rock & Roll',
-        artists: ['Led Zeppelin', 'Pink FLoyd', 'Deep Purple']
-      },
-      {
-        name: 'Hip Hop',
-        artists: ['Eazy-E', 'Tupac', 'Notorious B.I.G']
-      },
-      {
-        name: 'EDM',
-        artists: ['Skrillex', 'Flux Pavilion', 'Diplo', 'Tsuruda']
-      }
-    ]
-  }
+function GenreCounter(props) {
+
+  let genreCount = 0;
+
+  props.artists.forEach( (artist) => {
+    genreCount += artist.genres.length
+  })
+
+  return (
+    <h2 style={{display: "block", "text-align": "center"}}>
+      {genreCount} Genres
+    </h2>
+  )
+}
+
+function ArtistCounter(props) {
+
+  let artistCount = props.artists.length
+
+  return (
+    <h2 style={{display: "block", "text-align": "center"}}>
+      from your top {artistCount} artists!
+    </h2>
+  )
 }
 
 class Genres extends Component {
@@ -59,8 +61,8 @@ class Genres extends Component {
           </h2>
         </div> 
 
-      : <ul className="artists">{artist.map( artist =>
-          <li onClick={this.onGenreClick}> {artist.name} </li> )}
+      : <ul className="artists">
+          <li onClick={this.onGenreClick}> {artist.name} </li>
         </ul>
       }
       </div>
@@ -90,58 +92,56 @@ class App extends Component {
         .map(k => esc(k) + '=' + esc(params[k]))
         .join('&');
 
-    fetch('https://api.spotify.com/v1/me/top/artists?' + query, {
-      headers: {'Authorization': 'Bearer ' + accessToken}
-    }).then(response => response.json())
-    .then(data => this.setState({
-      serverData: {
-        user: {
-          artists: data.items
-        }
-      }
-    }))
-
+    // Fetch user data from /me endpont
+    // Access user display name, email, country, and profile picture
     fetch('https://api.spotify.com/v1/me', {
       headers: {'Authorization': 'Bearer ' + accessToken}
     }).then(response => response.json())
+
     .then(data => {
       console.log(data)
       this.setState({
-      serverData: {
         user: {
           email: data.email
         }
-      }
+      })
     })
-    })
+
+    // Fetch top 50 artists
+    // Requires query params: (limit, time_range)
+    // 'items' contains an array of artists objects
+    fetch('https://api.spotify.com/v1/me/top/artists?' + query, {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    }).then(response => response.json())
+
+    .then(data => this.setState({
+      artists: data.items.map(item => ({
+        name: item.name,
+        genres: item.genres
+      }))
+    }))
 
   }
 
   render () {
+    let userArtists = this.state.user && this.state.artists
+
     return (
       <div className="App">
-      {this.state.serverData.user
+      {this.state.user
       ? <div className="logged-in">
-
-        {this.state.serverData.user.artists &&
+        {userArtists &&
           <div>
             <h1 style={{...headerStyle}}>
+              Hi {this.state.user.email}! Here is your listening data:
+              <GenreCounter artists={userArtists}/>
+              <ArtistCounter artists={userArtists}/>
 
-              Hi {this.state.serverData.user.email}! Here is your listening data:
-
-              <h2>
-                <GenreCounter genreCount={fakeServerData.user &&
-                                        fakeServerData.user.genreCount}/>
-                <ArtistCounter artists={fakeServerData.user &&
-                                        fakeServerData.user.artistCount}/>
-                {console.log(this.state.serverData.user.artists)}
-                {this.state.serverData.user.artists.map( artist => <Genres genre={artist}/> )}
-              </h2>
-
+              {console.log(userArtists)}
+              {userArtists.map( artist => <Genres genre={artist}/> )}
             </h1>
           </div>
-        }
-
+        } 
         </div>
 
       : <Login/>
