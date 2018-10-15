@@ -8,6 +8,7 @@
 
 # production
 /build
+/backend-server
 
 # misc
 .DS_Store
