@@ -7,6 +7,10 @@
   padding: 220px;
 }
 
+.logged-in {
+  background-color: rgb(63, 63, 63)
+}
+
 h1 {
   color: black;
   font-size: 50px;
