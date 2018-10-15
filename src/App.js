@@ -4,10 +4,6 @@ import queryString from 'query-string';
 import Login from './Components/Login';
 import * as d3 from "d3";
 
-const headerStyle = {
-  "font-size":"50px"
-}
-
 function GenreCounter(props) {
 
   let genreCount = 0;
@@ -95,10 +91,16 @@ class D3BubbleChart extends Component {
     function updateCircle() {
       circles
         .attr("cx", function(d) {
-          return d.x = Math.max(radiusScale(d['count']), Math.min(width - radiusScale(d['count']), d.x));
+          return d.x = 
+            Math.max(radiusScale(d['count']),
+            Math.min(width - radiusScale(d['count']),
+             d.x))
         })
         .attr("cy", function(d) {
-          return d.y = Math.max(radiusScale(d['count']), Math.min(height - radiusScale(d['count']), d.y));
+          return d.y = 
+            Math.max(radiusScale(d['count']),
+            Math.min(height - radiusScale(d['count']),
+              d.y))
         })
     }
   }
@@ -110,40 +112,6 @@ class D3BubbleChart extends Component {
       )
     }
   }
-
-class Genres extends Component {
-  constructor() {
-    super();
-    this.state = {
-      showGenre: true
-    }
-  }
-
-  onGenreClick = () => {
-    this.setState({
-      showGenre: !this.state.showGenre
-    })
-  }
-
-  render() {
-    const artist = this.props.genre;
-    return (
-      <div className="genres-artists">
-      {this.state.showGenre 
-      ? <div className="genres">
-          <h2 onClick={this.onGenreClick}>
-            {artist.genres.map( genre => <h3> {genre} </h3> )}
-          </h2>
-        </div> 
-
-      : <ul className="artists">
-          <li onClick={this.onGenreClick}> {artist.name} </li>
-        </ul>
-      }
-      </div>
-    )
-  }
-}
 
 class App extends Component {
   constructor() {
@@ -237,7 +205,6 @@ class App extends Component {
       ? <div className="logged-in">
         {userGenres &&
           <div>
-              <ArtistCounter artists={userArtists}/>
             <h1>
               Hi {this.state.user.name}. Here is your listening data:
               {console.log(this.state.genres)}
