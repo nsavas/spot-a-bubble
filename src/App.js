@@ -4,32 +4,6 @@ import queryString from 'query-string';
 import Login from './Components/Login';
 import * as d3 from "d3";
 
-function GenreCounter(props) {
-
-  let genreCount = 0;
-
-  props.artists.forEach( (artist) => {
-    genreCount += artist.genres.length
-  })
-
-  return (
-    <h2 style={{display: "block", "text-align": "center"}}>
-      {genreCount} Genres
-    </h2>
-  )
-}
-
-function ArtistCounter(props) {
-
-  let artistCount = props.artists.length
-
-  return (
-    <h2 style={{display: "block", "text-align": "center"}}>
-      from your top {artistCount} artists!
-    </h2>
-  )
-}
-
 class D3BubbleChart extends Component {
   constructor(props) {
     super(props);
@@ -48,34 +22,76 @@ class D3BubbleChart extends Component {
   }
 
   createBubbleChart() {
-
-    let width = window.innerWidth - 10;
-    let height = window.innerHeight - 10;
+    let width = window.innerWidth;
+    let height = window.innerHeight + 80;
     let data = this.state.data;
     let svg = d3.select(".bubble-chart")
       .append("svg")
       .attr("height", height)
       .attr("width", width)
       .append("g")
-      .attr("transform", "translate(0,0)")
+      .attr("transform", "translate(0,10)")
 
     let radiusScale = d3.scaleSqrt().domain(
       d3.extent(data, function(d) {return d['count'];})
-    ).range([10, 150])
+    ).range([15, 165])
 
     let simulation = d3.forceSimulation();
 
+    let div = d3.select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+
+    
     let circles = svg.selectAll(".artist")
       .data(data)
       .enter()
       .append("circle")
       .attr("class", "artist")
       .attr("fill", function(d) {
-        return d3.interpolateRdBu(Math.random())
+        return d3.interpolatePuBuGn(Math.random())
       })
       .attr("stroke", "black")
       .attr("r", function(d) {
         return radiusScale(d['count'])
+      })
+      .on("mouseover", function(d) {
+        d3.select(this).attr("r", function(d) {
+          {return radiusScale(d['count']) + 10;}
+        })
+
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("x", function(d) {
+            return d.x - 30
+        })
+          .style("cursor", "pointer")
+          .attr("width", 60)
+
+        div.transition()
+          .duration(500)
+          .style("opacity", 0.9)
+          .style("display", "block")
+
+        let artistList = []
+
+        d.artists.forEach(artist => {
+          artistList.push(artist.name)
+        })
+
+        div.html("<b>Genre: </b></br>" 
+          + d['genre'] + "</br>"
+          + "<b>Artists: </b></br>" 
+          + artistList.join("</br>"))
+          .style("left", d.x + "px")
+          .style("top", d.x + "px")
+      })
+      .on("mouseout", function(d) {
+        d3.select(this).attr("r", function(d) {
+          {return radiusScale(d['count']);}
+        })
       })
 
     // Simulation will apply forces to each
@@ -85,7 +101,7 @@ class D3BubbleChart extends Component {
       .force("x", d3.forceX(width / 2).strength(0.04))
       .force("y", d3.forceY(height / 2).strength(0.04))
       .force("collide", d3.forceCollide(function(d) {
-        return radiusScale(d['count']) + 4
+        return radiusScale(d['count']) + 8
       }))
 
     function updateCircle() {
@@ -99,17 +115,13 @@ class D3BubbleChart extends Component {
         .attr("cy", function(d) {
           return d.y = 
             Math.max(radiusScale(d['count']),
-            Math.min(height - radiusScale(d['count']),
+            Math.min(height - radiusScale(d['count'] + 20),
               d.y))
         })
     }
   }
-
     render() {
-      return (
-        <div className="bubble-chart">
-        </div>
-      )
+      return (<div className="bubble-chart" style={{"paddingTop": "15px"}}></div>)
     }
   }
 
@@ -205,16 +217,14 @@ class App extends Component {
       ? <div className="logged-in">
         {userGenres &&
           <div>
-            <h1>
+            <h1 style={{color: "white", "text-align": "center", "font-family": "Fjalla One, sans-serif", "padding": "7px"}}>
               Hi {this.state.user.name}. Here is your listening data:
               {console.log(this.state.genres)}
               <D3BubbleChart data={this.state.genres}/>
             </h1>
-
           </div>
-        } 
+        }
         </div>
-
       : <Login/>
       }
       </div>
