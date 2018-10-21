@@ -22,43 +22,47 @@ class D3BubbleChart extends Component {
   }
 
   createBubbleChart() {
-    let width = window.innerWidth;
-    let height = window.innerHeight + 80;
+    let width = 1275;
+    let height = window.innerHeight;
     let data = this.state.data;
     let svg = d3.select(".bubble-chart")
       .append("svg")
       .attr("height", height)
       .attr("width", width)
+      .attr("display", "block")
       .append("g")
-      .attr("transform", "translate(0,10)")
+      .attr("transform", "translate(7,10)")
 
+    // Scales genre frequency based on count attribute
     let radiusScale = d3.scaleSqrt().domain(
       d3.extent(data, function(d) {return d['count'];})
-    ).range([15, 165])
+    ).range([15, 140])
 
+    // Simulation object used to apply forces to each bubble
     let simulation = d3.forceSimulation();
 
+    // Div element will be used to display bubble data on mouseover
     let div = d3.select("body")
       .append("div")
       .attr("class", "tooltip")
       .style("opacity", 0)
 
-    
+    // Append a circle to SVG for each genre
     let circles = svg.selectAll(".artist")
       .data(data)
       .enter()
       .append("circle")
       .attr("class", "artist")
       .attr("fill", function(d) {
-        return d3.interpolatePuBuGn(Math.random())
+        return d3.interpolateRainbow(Math.random()) // Randomize bubble color
       })
       .attr("stroke", "black")
       .attr("r", function(d) {
-        return radiusScale(d['count'])
+        return radiusScale(d['count']) // Use scale to determine bubble radius
       })
       .on("mouseover", function(d) {
         d3.select(this).attr("r", function(d) {
-          {return radiusScale(d['count']) + 10;}
+          {return radiusScale(d['count']) + 10;} // On mouseover, increase radius by 10
         })
 
         d3.select(this)
@@ -75,6 +79,7 @@ class D3BubbleChart extends Component {
           .style("opacity", 0.9)
           .style("display", "block")
 
+        // Create an array of artists associated with bubbles genre
         let artistList = []
 
         d.artists.forEach(artist => {
@@ -84,11 +89,11 @@ class D3BubbleChart extends Component {
         div.html("<b>Genre: </b></br>" 
           + d['genre'] + "</br>"
           + "<b>Artists: </b></br>" 
-          + artistList.join("</br>"))
-          .style("left", d.x + "px")
-          .style("top", d.x + "px")
+          + artistList.join("</br>")) // Makes artistList a string joined with a breakline
+          .style("left", "1290px")
+          .style("top", "240px")
       })
-      .on("mouseout", function(d) {
+      .on("mouseout", function(d) { // On mouseout, reduce bubble radius back to original
         d3.select(this).attr("r", function(d) {
           {return radiusScale(d['count']);}
         })
@@ -104,16 +109,17 @@ class D3BubbleChart extends Component {
         return radiusScale(d['count']) + 8
       }))
 
+    // On each tick, update bubbles location
     function updateCircle() {
       circles
         .attr("cx", function(d) {
-          return d.x = 
+          return d.x = // Keeps bubbles within width bounds
             Math.max(radiusScale(d['count']),
-            Math.min(width - radiusScale(d['count']),
+            Math.min(width - 20 - radiusScale(d['count']),
              d.x))
         })
         .attr("cy", function(d) {
-          return d.y = 
+          return d.y = // Keeps bubbles within height bounds
             Math.max(radiusScale(d['count']),
             Math.min(height - radiusScale(d['count'] + 20),
               d.y))
@@ -121,27 +127,30 @@ class D3BubbleChart extends Component {
     }
   }
     render() {
-      return (<div className="bubble-chart" style={{"paddingTop": "15px"}}></div>)
+      return (<div className="bubble-chart"></div>)
     }
   }
 
+// Main app component. Formats and fetches data to be sent to D3BubbleChart
+// Renders login page and application
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      serverData: {}
-    }
+    this.state = {}
   };
 
   componentDidMount() {
+    // Grab access token from url
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
 
+    // Query params to be passed to API endpoint
     let params = {
       limit: 50,
       time_range: 'long_term'
     };
 
+    // Encode each query paramater 
     let esc = encodeURIComponent;
     let query = Object.keys(params)
         .map(k => esc(k) + '=' + esc(params[k]))
@@ -170,15 +179,15 @@ class App extends Component {
     }).then(response => response.json())
     .then(data => {
       console.log(data)
-      // Generate an array of all genres associated with each
-      // of the users top genres
+
+      // Generate an array of all genres associated with each artist object
       let allGenres = []
+      let artistCount = data.items.length
       data.items.forEach(function(element) {
         element.genres.forEach(function(g) {
           allGenres.push(g)
         })
       })
-      console.log(allGenres)
 
       // Generate an array of only unique genres
       let uniqueGenres = Array.from(new Set(allGenres))
@@ -187,13 +196,19 @@ class App extends Component {
       let genreList = []
       uniqueGenres.forEach(function(g) {
 
+        // Count frequency of each genre
         let count = 0
         allGenres.forEach(function(i) {
-          if (i == g) {
+          if (i === g) {
             count += 1
           }
         })
 
+        // For each unique genre, create a genre object containing
+        // its name, associated artists, and genre frequency
+        // Push each object to GenreList array
+
+        // GenreList will be the data used for d3 visualization
         genreList.push({
           genre: g,
           artists: data.items.filter(artist => {
@@ -203,25 +218,65 @@ class App extends Component {
         })
       })
 
+      let genreCount = genreList.length;
+
       this.setState({
-        genres: genreList
+        genres: genreList,
+        genreCount: genreCount,
+        artistCount: artistCount
       })
     })
+
+    let date = new Date();
+
+    // Format the current time to AMPM
+    // This will be displayed upon user login
+    function formatTimeToAMPM(date) {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let ampm = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+
+      let timeInAMPM = hours + ":" + minutes + " " + ampm
+      return timeInAMPM
+    }
+
+    let currentTime = formatTimeToAMPM(date);
+
+    this.setState({
+      date: {
+        time: currentTime
+      }
+    })
+
   }
 
   render () {
+    // If user exists, set userGenres to genreList
     let userGenres = this.state.user && this.state.genres
     return (
       <div className="App">
-      {this.state.user
+      {this.state.user // If user is logged in, display visualization. If not, display login screen
       ? <div className="logged-in">
         {userGenres &&
           <div>
-            <h1 style={{color: "white", "text-align": "center", "font-family": "Fjalla One, sans-serif", "padding": "7px"}}>
-              Hi {this.state.user.name}. Here is your listening data:
+            <h1 style={{color: "white", "text-align": "inline", "font-family": "Armata, sans-serif"}}>
+              <b>Logged in as:</b> {this.state.user.name} @ {this.state.date.time}
+              <br/>
+              <b>Email:</b> {this.state.user.email}
+            </h1>
+            <h1 style={{color: "white", "text-align": "center", "font-family": "Armata, sans-serif"}}>
+              <b>{this.state.genreCount}</b> genre bubbles representing your top <b>{this.state.artistCount}</b> artists
+              <br/><br/>
+              Hover your mouse over a bubble to see what genre it represents and its corresponding artists.
+              <br/><br/>
+              The larger the bubble, the higher its listening frequency!
+            </h1>
               {console.log(this.state.genres)}
               <D3BubbleChart data={this.state.genres}/>
-            </h1>
           </div>
         }
         </div>
