@@ -4,7 +4,7 @@ This service logs in to Spotify and redirects the user to a given frontend appli
 
 ## Development mode
 
-In development mode, it assumes you are running the frontend on localhost:3000, but the server itself will be running on localhost:8888.
+In development mode, it assumes you are running the frontend on localhost:3000, but the server itself will be running on localhost:8888..
 
 In order to start developing, register a Spotify Application here:
 https://developer.spotify.com/my-applications
