@@ -259,7 +259,7 @@ class App extends Component {
     let userGenres = this.state.user && this.state.genres
     return (
       <div className="App">
-      {this.state.user // If user is logged in, display visualization. If not, display login screen
+      {this.state.genres // If user is logged in, display visualization. If not, display login screen
       ? <div className="logged-in">
         {userGenres &&
           <div>
