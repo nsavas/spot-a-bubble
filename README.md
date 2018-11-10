@@ -18,3 +18,8 @@ Click [here](https://spotabubble.herokuapp.com/) to login to your Spotify accoun
 * [Heroku](https://www.heroku.com/home) - Used to deploy app to the internet
 * [D3](https://d3js.org/) - Data visualization
 * [Spotify API](https://developer.spotify.com/documentation/) - API
+* [oauth-bridge-template](https://github.com/mpj/oauth-bridge-template) - Backend server
+
+## Authors
+
+* **Nathan Savas** - [Github](https://github.com/nsavas)
