@@ -3,7 +3,12 @@
 }
 
 .login {
-  padding: 500px;
+  text-align: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  padding: 235px;
+
 }
 
 .logged-in {
@@ -12,6 +17,7 @@
 }
 
 h1 {
+  font-weight: normal;
   color: black;
   font-size: 20px;
   padding: 7px;
