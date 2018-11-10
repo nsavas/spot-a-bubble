@@ -8,7 +8,7 @@ class HomeButton extends Component {
           <button onClick={() => { 
             window.location = window.location.href.includes('localhost')
             ? 'localhost:8888/login'
-            : 'http://spotabubble-backend.herokuapp.com/callback'} 
+            : 'https://spotabubble-backend.herokuapp.com/callback'} 
           } type="button" className="btn btn-outline-dark btn-lg">
           get started
           </button>
