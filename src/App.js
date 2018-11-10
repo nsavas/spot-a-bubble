@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import queryString from 'query-string';
+import queryString from '../node_modules/query-string';
 import Login from './Components/Login';
 import * as d3 from "d3";
 
@@ -54,7 +54,7 @@ class D3BubbleChart extends Component {
       .append("circle")
       .attr("class", "artist")
       .attr("fill", function(d) {
-        return d3.interpolateRainbow(Math.random()) // Randomize bubble color
+        return d3.interpolateSinebow(Math.random()) // Randomize bubble color
       })
       .attr("stroke", "black")
       .attr("r", function(d) {
