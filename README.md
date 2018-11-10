@@ -2,6 +2,8 @@
 
 Generates an interactive bubble chart using listening data from your Spotify account. The more a genre is listened to, the larger the bubble radius. Hover your mouse over a bubble to see the associated artists. 
 
+Main code is found in App.js
+
 ### Prerequisites
 
 ```
