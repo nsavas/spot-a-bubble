@@ -62,7 +62,7 @@ class D3BubbleChart extends Component {
       })
       .on("mouseover", function(d) {
         d3.select(this).attr("r", function(d) {
-          {return radiusScale(d['count']) + 10;} // On mouseover, increase radius by 10
+          return radiusScale(d['count']) + 10; // On mouseover, increase radius by 10
         })
 
         d3.select(this)
@@ -95,7 +95,7 @@ class D3BubbleChart extends Component {
       })
       .on("mouseout", function(d) { // On mouseout, reduce bubble radius back to original
         d3.select(this).attr("r", function(d) {
-          {return radiusScale(d['count']);}
+          return radiusScale(d['count']);
         })
       })
 
@@ -263,12 +263,12 @@ class App extends Component {
       ? <div className="logged-in">
         {userGenres &&
           <div>
-            <h1 style={{color: "white", "text-align": "inline", "font-family": "Armata, sans-serif"}}>
+            <h1 style={{color: "white", "textAlign": "inline", "fontFamily": "Armata, sans-serif"}}>
               <b>Logged in as:</b> {this.state.user.name} @ {this.state.date.time}
               <br/>
               <b>Email:</b> {this.state.user.email}
             </h1>
-            <h1 style={{color: "white", "text-align": "center", "font-family": "Armata, sans-serif"}}>
+            <h1 style={{color: "white", "textAlign": "center", "fontFamily": "Armata, sans-serif"}}>
               <b>{this.state.genreCount}</b> genre bubbles representing your top <b>{this.state.artistCount}</b> artists
               <br/><br/>
               Hover your mouse over a bubble to see what genre it represents and its corresponding artists.
