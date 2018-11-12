@@ -44,7 +44,7 @@ h1 {
   background-color: rgb(250, 250, 250);
   border-radius: 10px;
   color: #000000;
-  font-family: 'Overpass', 'Sans serif';
+  font-family: Armata;
   padding: 6px 12px;
   z-index:3;
 }
@@ -52,8 +52,8 @@ h1 {
 .tooltip:after {
   box-sizing: border-box;
   display: inline;
-  width: 100%;
   line-height: 1;
+  width: 100%;
   color: rgb(250, 250, 250);
   position: absolute;
   text-align: center;

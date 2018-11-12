@@ -44,7 +44,7 @@ class D3BubbleChart extends Component {
     // Div element will be used to display bubble data on mouseover
     let div = d3.select("body")
       .append("div")
-      .attr("className", "tooltip")
+      .attr("class", "tooltip")
       .style("opacity", 0)
 
     // Append a circle to SVG for each genre
@@ -69,7 +69,7 @@ class D3BubbleChart extends Component {
           .transition()
           .duration(200)
           .attr("x", function(d) {
-            return d.x
+            return d.x - 30
         })
           .style("cursor", "pointer")
           .attr("width", 60)
@@ -85,8 +85,6 @@ class D3BubbleChart extends Component {
         d.artists.forEach(artist => {
           artistList.push(artist.name)
         })
-
-        console.log(artistList)
 
         div.html("<b>Genre: </b></br>" 
           + d['genre'] + "</br>"
