@@ -22,7 +22,7 @@ class D3BubbleChart extends Component {
   }
 
   createBubbleChart() {
-    let width = 1275;
+    let width = window.innerWidth;
     let height = window.innerHeight;
     let data = this.state.data;
     let svg = d3.select(".bubble-chart")
@@ -42,10 +42,10 @@ class D3BubbleChart extends Component {
     let simulation = d3.forceSimulation();
 
     // Div element will be used to display bubble data on mouseover
-    let div = d3.select("body")
+    d3.select("body")
       .append("div")
       .attr("class", "tooltip")
-      .style("opacity", 0)
+      .style("opacity", 1)
 
     // Append a circle to SVG for each genre
     let circles = svg.selectAll(".artist")
@@ -74,7 +74,7 @@ class D3BubbleChart extends Component {
           .style("cursor", "pointer")
           .attr("width", 60)
 
-        div.transition()
+        d3.select(".tooltip").transition()
           .duration(500)
           .style("opacity", 0.9)
           .style("display", "block")
@@ -86,7 +86,7 @@ class D3BubbleChart extends Component {
           artistList.push(artist.name)
         })
 
-        div.html("<b>Genre: </b></br>" 
+        d3.select(".tooltip").html("<b>Genre: </b></br>" 
           + d['genre'] + "</br>"
           + "<b>Artists: </b></br>" 
           + artistList.join("</br>")) // Makes artistList a string joined with a breakline
@@ -115,7 +115,7 @@ class D3BubbleChart extends Component {
         .attr("cx", function(d) {
           return d.x = // Keeps bubbles within width bounds
             Math.max(radiusScale(d['count']),
-            Math.min(width - 20 - radiusScale(d['count']),
+            Math.min(width - 290 - radiusScale(d['count']),
              d.x))
         })
         .attr("cy", function(d) {
