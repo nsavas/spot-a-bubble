@@ -45,7 +45,7 @@ class D3BubbleChart extends Component {
     d3.select("body")
       .append("div")
       .attr("class", "tooltip")
-      .style("opacity", 1)
+      .style("opacity", 0.5)
 
     // Append a circle to SVG for each genre
     let circles = svg.selectAll(".artist")
@@ -54,12 +54,13 @@ class D3BubbleChart extends Component {
       .append("circle")
       .attr("class", "artist")
       .attr("fill", function(d) {
-        return d3.interpolateSinebow(Math.random()) // Randomize bubble color
+        return d3.interpolateRainbow(Math.random()) // Randomize bubble color
       })
       .attr("stroke", "black")
       .attr("r", function(d) {
         return radiusScale(d['count']) // Use scale to determine bubble radius
       })
+      .style("opacity", 0.7)
       .on("mouseover", function(d) {
         d3.select(this).attr("r", function(d) {
           return radiusScale(d['count']) + 10; // On mouseover, increase radius by 10
@@ -143,6 +144,7 @@ class App extends Component {
     // Grab access token from url
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
+    console.log(accessToken);
 
     // Query params to be passed to API endpoint
     let params = {
@@ -160,9 +162,8 @@ class App extends Component {
     // Access user display name, email, country, and profile picture
     fetch('https://api.spotify.com/v1/me', {
       headers: {'Authorization': 'Bearer ' + accessToken}
-    }).then(response => response.json())
-    .then(data => {
-      console.log(data)
+    }).then(response => response.json()).then(data => {
+      console.log(data);
       this.setState({
         user: {
           name: data.display_name,
@@ -176,9 +177,8 @@ class App extends Component {
     // 'items' contains an array of artists objects
     fetch('https://api.spotify.com/v1/me/top/artists?' + query, {
       headers: {'Authorization': 'Bearer ' + accessToken}
-    }).then(response => response.json())
-    .then(data => {
-      console.log(data)
+    }).then(response => response.json()).then(data => {
+      console.log(data);
 
       // Generate an array of all genres associated with each artist object
       let allGenres = []
