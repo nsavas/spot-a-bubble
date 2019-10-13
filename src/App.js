@@ -23,7 +23,7 @@ class D3BubbleChart extends Component {
 
   createBubbleChart() {
     let width = window.innerWidth;
-    let height = window.innerHeight - 105;
+    let height = window.innerHeight * 0.87
 
     console.log(width);
     console.log(window.innerHeight);
@@ -110,7 +110,7 @@ class D3BubbleChart extends Component {
       .force("x", d3.forceX(width / 2).strength(0.04))
       .force("y", d3.forceY(height / 2).strength(0.04))
       .force("collide", d3.forceCollide(function(d) {
-        return radiusScale(d['count']) + 8
+        return radiusScale(d['count']) + 15
       }))
 
     // On each tick, update bubbles location
