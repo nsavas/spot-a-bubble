@@ -107,10 +107,10 @@ class D3BubbleChart extends Component {
     // data point and define how these data points
     // interact with each other
     simulation.nodes(data).on("tick", updateCircle)
-      .force("x", d3.forceX(width / 2).strength(0.04))
-      .force("y", d3.forceY(height / 2).strength(0.04))
+      .force("x", d3.forceX(width / 2).strength(0.05))
+      .force("y", d3.forceY(height / 2).strength(0.05))
       .force("collide", d3.forceCollide(function(d) {
-        return radiusScale(d['count']) + 15
+        return radiusScale(d['count']) + 1
       }))
 
     // On each tick, update bubbles location
