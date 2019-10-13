@@ -1,39 +1,6 @@
-.genres-artists {
-  text-align: center
-}
-
-.login {
-  text-align: center;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.6);
-  overflow: hidden;
-  padding: 235px;
-
-}
-
 .logged-in {
   background-color: #696969;
   overflow: hidden;
-}
-
-h1 {
-  font-weight: normal;
-  color: black;
-  font-size: 19px;
-  padding: 7px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 100vh;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.date {
-  float: right;
 }
 
 .tooltip {
@@ -77,8 +44,3 @@ h1 {
     color: #131313;
     text-align: center;
   }
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}

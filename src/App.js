@@ -23,7 +23,10 @@ class D3BubbleChart extends Component {
 
   createBubbleChart() {
     let width = window.innerWidth;
-    let height = window.innerHeight;
+    let height = window.innerHeight - 105;
+
+    console.log(width);
+    console.log(window.innerHeight);
     let data = this.state.data;
     let svg = d3.select(".bubble-chart")
       .append("svg")
@@ -31,7 +34,7 @@ class D3BubbleChart extends Component {
       .attr("width", width)
       .attr("display", "block")
       .append("g")
-      .attr("transform", "translate(7,10)")
+      .attr("transform", "translate(0,10)")
 
     // Scales genre frequency based on count attribute
     let radiusScale = d3.scaleSqrt().domain(
