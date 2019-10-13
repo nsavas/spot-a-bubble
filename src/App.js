@@ -270,10 +270,10 @@ class App extends Component {
             </h1>
             <h1 style={{color: "white", "textAlign": "center", "fontFamily": "Armata, sans-serif"}}>
               <b>{this.state.genreCount}</b> genre bubbles representing your top <b>{this.state.artistCount}</b> artists
-              <br/><br/>
+              <br/>
               Hover your mouse over a bubble to see what genre it represents and its corresponding artists.
-              <br/><br/>
-              The larger the bubble, the higher its listening frequency!
+              <br/>
+              The larger the bubble, the more you listen to it!
             </h1>
               {console.log(this.state.genres)}
               <D3BubbleChart data={this.state.genres}/>
