@@ -266,6 +266,8 @@ class App extends Component {
       ? <div className="logged-in">
         {userGenres &&
           <div>
+            <div className="userInfo">
+            </div>
             <h1 style={{color: "white", "textAlign": "inline", "fontFamily": "Armata, sans-serif"}}>
               <b>Logged in as:</b> {this.state.user.name} @ {this.state.date.time}
               <br/>
